@@ -1,6 +1,7 @@
-class TokenStorage{
-
-  TokenStorage._privateConstructor();
+class TokenStorage {
+  TokenStorage._privateConstructor() {
+    _token = "";
+  }
 
   static TokenStorage _instance = TokenStorage._privateConstructor();
 

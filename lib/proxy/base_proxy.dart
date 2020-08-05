@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_quote_maker/component/logger.dart';
 import 'package:flutter/material.dart';
 
 
@@ -22,9 +24,10 @@ class BaseProxy {
             (X509Certificate cert, String host, int port) => true;
         return client;
       };
+      Logger.info("App support all certificate");
     }
     catch (e){
-      print("self signed cert acceptation crashed");
+      Logger.info("App don't support all certificate");
     }
   }
 }
