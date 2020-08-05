@@ -1,4 +1,6 @@
+
 import 'package:dio/dio.dart';
+import 'package:easy_quote_maker/component/logger.dart';
 import 'package:easy_quote_maker/configuration/server_address.dart';
 import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/response_token.dart';
@@ -8,7 +10,6 @@ import 'package:easy_quote_maker/proxy/base_proxy.dart';
 class TokenProxy extends BaseProxy{
 
   RequestTokenUser _requestTokenUser;
-
 
   TokenProxy():super() {
     BaseOptions options =
@@ -36,7 +37,7 @@ class TokenProxy extends BaseProxy{
         }
       }
       catch (e) {
-        print(e);
+        Logger.error("Unable to get Token");
       }
     }
   }

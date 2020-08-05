@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:dio/src/options.dart';
+import 'package:easy_quote_maker/component/logger.dart';
 import 'package:easy_quote_maker/interfaces/jsonable.dart';
 import 'package:easy_quote_maker/model/token_storage.dart';
 import 'package:easy_quote_maker/proxy/base_proxy.dart';
+
 
 class CrudProxy<T extends JSONable> extends BaseProxy{
 
@@ -13,9 +15,6 @@ class CrudProxy<T extends JSONable> extends BaseProxy{
     Map<String, String> headers;
     if (tokenStorage.token?.isNotEmpty) {
       headers = {'authorization': "Bearer "+tokenStorage.token};
-    }
-    else{
-      throw Exception("undefined token");
     }
     BaseOptions options =
     BaseOptions(
@@ -36,7 +35,21 @@ class CrudProxy<T extends JSONable> extends BaseProxy{
       }
     }
     catch (e){
+      Logger.error("Get at ${dio.options.baseUrl} failed :");
+    }
+  }
 
+  Future<T>post(T data) async{
+    Response response;
+    try{
+      response = await dio.post("",data: data.toJson());
+      if (response.statusCode == 201){
+        T t = newType.cloneFromJson(response.data);
+        return t;
+      }
+    }
+    catch (e){
+      Logger.error("Post at ${dio.options.baseUrl} failed :");
     }
   }
 

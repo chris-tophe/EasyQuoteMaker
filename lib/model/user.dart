@@ -27,16 +27,20 @@ class User implements JSONable {
     List l = List.of(json["roles"]);
     l.forEach((string) {
       Role.values.forEach((role) {
-        String role2S = describeEnum(role);
         if (describeEnum(role) == string) _roles.add(role);
       });
-
     });
   }
 
   @override
   Map<String, dynamic> toJson() {
-    //TODO
+    return {
+    "firstName": _firstName,
+    "lastName": _lastName,
+    "email": _email,
+    "password": _password,
+    "username": _username
+    };
   }
 
   List<Role> get roles => _roles;
@@ -79,6 +83,12 @@ class User implements JSONable {
 
   set id(int value) {
     _id = value;
+  }
+
+  String get password => _password;
+
+  set password(String value) {
+    _password = value;
   }
 
   @override

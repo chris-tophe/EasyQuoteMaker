@@ -2,6 +2,7 @@ import 'package:easy_quote_maker/configuration/server_address.dart';
 import 'package:easy_quote_maker/model/role.dart';
 import 'package:easy_quote_maker/model/user.dart';
 import 'package:easy_quote_maker/proxy/crud_proxy.dart';
+import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,8 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   void initState() {
-    userProxy = CrudProxy<User>(ServerAddress.USER, User());
+    super.initState();
+    userProxy = ProxyFactory.createUserProxy();
     user = userProxy.get();
   }
 

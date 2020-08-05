@@ -1,7 +1,9 @@
 import 'package:easy_quote_maker/component/validators.dart';
 import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/token_storage.dart';
+import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:easy_quote_maker/proxy/token_proxy.dart';
+import 'package:easy_quote_maker/widgets/labeled_text_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,25 +39,26 @@ class _DisplayForm extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
+              LabeledTextInput(
+                label: "Username",
                 controller: _usernameTextController,
                 validator: Validator.isNotEmpty,
               ),
-              TextFormField(
+              LabeledTextInput(
+                label: "Password",
                 controller: _passwordTextController,
                 validator: Validator.isValidPassword,
               ),
+              SizedBox(height: 10,),
               RaisedButton(
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
 
-                    TokenProxy tokenProxy = TokenProxy();
+                    final tokenProxy = ProxyFactory.createTokenProxy() ;
                     RequestTokenUser user = RequestTokenUser(_usernameTextController.text,_passwordTextController.text);
                     tokenProxy.requestTokenUser = user;
                     await tokenProxy.fetchToken();
-                    if(TokenStorage.instance.token?.isNotEmpty){
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text(TokenStorage.instance.token)));
+                    if(TokenStorage.instance.token != null && TokenStorage.instance.token.isNotEmpty){
                       Navigator.pushNamed(context, 'userScreen');
                     }
                   }
