@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:easy_quote_maker/component/alert_factory.dart';
 import 'package:easy_quote_maker/component/validators.dart';
-
+import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/user.dart';
 import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:easy_quote_maker/widgets/labeled_text_input.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationForm extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class RegistrationForm extends StatefulWidget {
 class _RegistrationFormState extends State<RegistrationForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordConfirmController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -23,8 +26,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   void initState() {
     super.initState();
-    _usernameController.text = "bobChapentier";
+    _usernameController.text = "bobChar";
     _passwordController.text = "bobbob";
+    _passwordConfirmController.text = "bobbob";
     _firstNameController.text = "Bob";
     _lastNameController.text = "Le Charpentier";
     _emailController.text = "bob@bob.com";
@@ -43,17 +47,23 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 LabeledTextInput(
                   label: "Username",
                   controller: _usernameController,
-                  validator: Validator.isNotEmpty,
+                  validator: Validator.isValidUsername,
                 ),
                 LabeledTextInput(
                   label: "Password",
                   controller: _passwordController,
                   validator: Validator.isValidPassword,
+                  obscure: true,
                 ),
                 LabeledTextInput(
                   label: "Password\nConfirmation",
-                  controller: _passwordController,
-                  validator: Validator.isValidPassword,
+                  controller: _passwordConfirmController,
+                  validator: (val) {
+                    var s = Validator.isSame(val, _passwordController.text);
+                    if (s != null)return s.toString();
+                    return null;
+                  },
+                  obscure: true,
                 ),
                 LabeledTextInput(
                   label: "First Name",
@@ -68,7 +78,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 LabeledTextInput(
                   label: "Email",
                   controller: _emailController,
-                  validator: Validator.isNotEmpty,
+                  validator: Validator.isValidEmail,
                 ),
                 MaterialButton(
                   child: Text("Register"),
@@ -78,12 +88,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       final user = User();
                       user.firstName = _firstNameController.text;
                       user.lastName = _lastNameController.text;
-                      user.username = _lastNameController.text;
+                      user.username = _usernameController.text;
                       user.email = _emailController.text;
                       user.password = _passwordController.text;
                       User createdUser = await userProxy.post(user);
+                      if (createdUser != null) createdUser.password = user.password;
                       if (createdUser?.username == user.username) {
-                        Navigator.pop(context, createdUser);
+                        final pref = await SharedPreferences.getInstance();
+                        Map<String,dynamic> js = RequestTokenUser(createdUser.username,createdUser.password).toJson();
+                        pref.setString("user",json.encode(js));
+                        Navigator.pop(context);
                       } else {
                         AlertFactory.alertWrong(context);
                       }

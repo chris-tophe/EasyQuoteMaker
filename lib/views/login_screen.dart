@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:easy_quote_maker/component/validators.dart';
 import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/token_storage.dart';
 import 'package:easy_quote_maker/proxy/proxy_factory.dart';
-import 'package:easy_quote_maker/proxy/token_proxy.dart';
 import 'package:easy_quote_maker/widgets/labeled_text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +24,37 @@ class _LoginScreenState extends State<LoginScreen> {
       body: _DisplayForm(),
     );
   }
+
+
 }
 
-class _DisplayForm extends StatelessWidget {
+class _DisplayForm extends StatefulWidget {
+  @override
+  _DisplayFormState createState() => _DisplayFormState();
+}
 
+class _DisplayFormState extends State<_DisplayForm> {
   final _formKey = GlobalKey<FormState>();
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    _getlastLoggedUser();
+  }
+
+  void _getlastLoggedUser() async{
+    final pref = await SharedPreferences.getInstance();
+    if (pref.containsKey("user")) {
+      String s = pref.getString('user');
+      Map<String,dynamic> js = jsonDecode(s);
+     RequestTokenUser lastLoggedUser = RequestTokenUser.fromJson(js);
+      _usernameTextController.text = lastLoggedUser.username;
+      _passwordTextController.text = lastLoggedUser.password;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +92,11 @@ class _DisplayForm extends StatelessWidget {
               ),
               MaterialButton(
                 child: Text("Register"),
-                onPressed: (){
-                  Navigator.pushNamed(context, "registerScreen");
+                onPressed: () async{
+                  await Navigator.pushNamed(context, "registerScreen");
+                  setState(() {
+                    _getlastLoggedUser();
+                  });
                 },
               ),
             ],
