@@ -5,12 +5,14 @@ class LabeledTextInput extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final Function validator;
+  final bool obscure;
 
   const LabeledTextInput(
       {Key key,
       @required this.label,
       @required this.controller,
-      this.validator})
+      this.validator,
+      this.obscure = false})
       : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class LabeledTextInput extends StatelessWidget {
               child: TextFormField(
                 controller: controller,
                 validator: validator,
+                obscureText: obscure,
               ),
             ),
           ],

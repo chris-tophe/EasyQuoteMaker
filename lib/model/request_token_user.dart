@@ -8,6 +8,11 @@ class RequestTokenUser {
     _username = json["username"];
     _password = json["password"];
   }
+
+  String get username => _username;
+
+  String get password => _password;
+
   Map<String, dynamic> toJson() {
     return {"username": _username, "password": _password};
   }
