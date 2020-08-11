@@ -4,10 +4,15 @@ import 'package:easy_quote_maker/proxy/crud_proxy.dart';
 import 'package:easy_quote_maker/proxy/token_proxy.dart';
 
 class ProxyFactory {
-  static TokenProxy createTokenProxy(){
+  static TokenProxy createTokenProxy() {
     return new TokenProxy();
   }
-  static CrudProxy<User> createUserProxy(){
-    return new CrudProxy<User>(ServerAddress.USER, new User());
+
+  static CrudProxy<User> createUserProxy(String token) {
+    return CrudProxy<User>(
+      url: ServerAddress.USER,
+      token: token,
+      newType: User(),
+    );
   }
 }

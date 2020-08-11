@@ -2,20 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:dio/src/options.dart';
 import 'package:easy_quote_maker/component/logger.dart';
 import 'package:easy_quote_maker/interfaces/jsonable.dart';
-import 'package:easy_quote_maker/model/token_storage.dart';
 import 'package:easy_quote_maker/proxy/base_proxy.dart';
+import 'package:flutter/cupertino.dart';
+
 
 
 class CrudProxy<T extends JSONable> extends BaseProxy{
 
   T newType;
 
-  CrudProxy(String url,this.newType):super() {
-    TokenStorage tokenStorage = TokenStorage.instance;
+  CrudProxy({@required String url, @required String token, @required T this.newType}):super() {
+    assert(url.isNotEmpty);
     Map<String, String> headers;
-    if (tokenStorage.token?.isNotEmpty) {
-      headers = {'authorization': "Bearer "+tokenStorage.token};
-    }
+    if (token != null)
+    headers = {'authorization': "Bearer "+token};
     BaseOptions options =
     BaseOptions(
         baseUrl: url,
@@ -23,6 +23,10 @@ class CrudProxy<T extends JSONable> extends BaseProxy{
         headers:headers
     );
     setOptions(options) ;
+  }
+
+  void setType(T newType){
+    this.newType = newType;
   }
 
   Future<T> get() async{
@@ -35,7 +39,7 @@ class CrudProxy<T extends JSONable> extends BaseProxy{
       }
     }
     catch (e){
-      Logger.error("Get at ${dio.options.baseUrl} failed :");
+      Logger.error("Get at ${dio.options.baseUrl} failed : ${e.toString()}");
     }
   }
 

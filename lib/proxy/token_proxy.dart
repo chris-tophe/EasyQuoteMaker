@@ -24,16 +24,17 @@ class TokenProxy extends BaseProxy{
     _requestTokenUser = value;
   }
 
-  fetchToken() async {
+  Future<String> fetchToken() async {
     Response response;
-    TokenStorage.instance.token = null;
+    //TokenStorage.instance.token = null;
     if (_requestTokenUser != null) {
       try {
         response = await dio.post("", data: _requestTokenUser.toJson());
         if (response.statusCode == 200) {
-          TokenStorage.instance.token = ResponseToken
-              .fromJson(response.data)
-              .token;
+          //TokenStorage.instance.token = ResponseToken
+          //    .fromJson(response.data)
+          //    .token;
+          return ResponseToken.fromJson(response.data).token;
         }
       }
       catch (e) {

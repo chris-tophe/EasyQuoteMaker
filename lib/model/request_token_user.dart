@@ -1,4 +1,7 @@
-class RequestTokenUser {
+import 'package:equatable/equatable.dart';
+
+
+class RequestTokenUser extends Equatable {
   String _username;
   String _password;
 
@@ -16,4 +19,7 @@ class RequestTokenUser {
   Map<String, dynamic> toJson() {
     return {"username": _username, "password": _password};
   }
+
+  @override
+  List<Object> get props => [_username , _password];
 }

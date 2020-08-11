@@ -1,3 +1,5 @@
+import 'package:bloc/bloc.dart';
+import 'package:easy_quote_maker/blocs/blocs.dart';
 import 'package:easy_quote_maker/configuration/server_address.dart';
 import 'package:easy_quote_maker/model/role.dart';
 import 'package:easy_quote_maker/model/user.dart';
@@ -5,6 +7,7 @@ import 'package:easy_quote_maker/proxy/crud_proxy.dart';
 import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserScreen extends StatefulWidget {
   UserScreen({Key key}) : super(key: key);
@@ -20,8 +23,9 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
-    userProxy = ProxyFactory.createUserProxy();
-    user = userProxy.get();
+    String token = BlocProvider.of<TokenBloc>(context).state.token;
+      userProxy = ProxyFactory.createUserProxy(token);
+      user = userProxy.get();
   }
 
   @override
@@ -30,8 +34,8 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(title: Text("EasyQuoteMaker")),
       body: Center(
         child: FutureBuilder<User>(
-          future: user,
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          future : user,
+          builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
                 children: [

@@ -1,13 +1,12 @@
-import 'dart:convert';
 
+import 'package:easy_quote_maker/blocs/blocs.dart';
+import 'package:easy_quote_maker/blocs/user_bloc/user_bloc.dart';
 import 'package:easy_quote_maker/component/alert_factory.dart';
 import 'package:easy_quote_maker/component/validators.dart';
-import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/user.dart';
-import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:easy_quote_maker/widgets/labeled_text_input.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegistrationForm extends StatefulWidget {
   @override
@@ -60,7 +59,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   controller: _passwordConfirmController,
                   validator: (val) {
                     var s = Validator.isSame(val, _passwordController.text);
-                    if (s != null)return s.toString();
+                    if (s != null) return s.toString();
                     return null;
                   },
                   obscure: true,
@@ -80,28 +79,41 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   controller: _emailController,
                   validator: Validator.isValidEmail,
                 ),
-                MaterialButton(
-                  child: Text("Register"),
-                  onPressed: () async {
-                    if (_validationFormKey.currentState.validate()) {
-                      final userProxy = ProxyFactory.createUserProxy();
-                      final user = User();
-                      user.firstName = _firstNameController.text;
-                      user.lastName = _lastNameController.text;
-                      user.username = _usernameController.text;
-                      user.email = _emailController.text;
-                      user.password = _passwordController.text;
-                      User createdUser = await userProxy.post(user);
-                      if (createdUser != null) createdUser.password = user.password;
-                      if (createdUser?.username == user.username) {
-                        final pref = await SharedPreferences.getInstance();
-                        Map<String,dynamic> js = RequestTokenUser(createdUser.username,createdUser.password).toJson();
-                        pref.setString("user",json.encode(js));
-                        Navigator.pop(context);
-                      } else {
-                        AlertFactory.alertWrong(context);
-                      }
+                BlocConsumer<UserBloc, UserState>(
+                  listenWhen: (previousState, state) {
+                    if (previousState.userStatus == UserStatus.inProgress &&
+                        (state.userStatus == UserStatus.fail ||
+                            state.userStatus == UserStatus.success)) {
+                      return true;
                     }
+                    return false;
+                  },
+                  listener: (context, state) {
+                    if (state.userStatus == UserStatus.fail) {
+                      AlertFactory.alertWrong(context);
+                      context.bloc<UserBloc>().add(UserClear());
+                    }
+                    if (state.userStatus == UserStatus.success) {
+                      context.bloc<TokenBloc>().add(
+                          TokenFetch(user: state.user.toRequestTokenUser()));
+                      Navigator.pop(context);
+                    }
+                  },
+                  builder: (context, state) {
+                    return MaterialButton(
+                      child: Text("Register"),
+                      onPressed: () async {
+                        if (_validationFormKey.currentState.validate()) {
+                          final user = User(
+                              firstName: _firstNameController.text,
+                              lastName: _lastNameController.text,
+                              username: _usernameController.text,
+                              email: _emailController.text,
+                              password: _passwordController.text);
+                          context.bloc<UserBloc>().add(UserSave(user: user));
+                        }
+                      },
+                    );
                   },
                 )
               ],

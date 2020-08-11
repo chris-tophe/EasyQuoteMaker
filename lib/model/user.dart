@@ -1,4 +1,5 @@
 import 'package:easy_quote_maker/interfaces/jsonable.dart';
+import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/role.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,7 +13,21 @@ class User implements JSONable {
   User _userManager;
   List<Role> _roles = List<Role>();
 
-  User();
+  User(
+      {int id,
+      String firstName,
+      String lastName,
+      String email,
+      String password,
+      String username,
+      User userManager})
+      : _id = id,
+        _firstName = firstName,
+        _lastName = lastName,
+        _email = email,
+        _password = password,
+        _username = username,
+        _userManager = userManager;
 
   @override
   User.fromJson(Map<String, dynamic> json) {
@@ -35,12 +50,16 @@ class User implements JSONable {
   @override
   Map<String, dynamic> toJson() {
     return {
-    "firstName": _firstName,
-    "lastName": _lastName,
-    "email": _email,
-    "password": _password,
-    "username": _username
+      "firstName": _firstName,
+      "lastName": _lastName,
+      "email": _email,
+      "password": _password,
+      "username": _username
     };
+  }
+
+  RequestTokenUser toRequestTokenUser(){
+    return RequestTokenUser(this.username , this.password);
   }
 
   List<Role> get roles => _roles;
