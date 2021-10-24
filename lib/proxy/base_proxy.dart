@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:easy_quote_maker/component/logger.dart';
+import 'package:easy_quote_maker/services/logger.dart';
 import 'package:flutter/material.dart';
 
 

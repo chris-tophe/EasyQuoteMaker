@@ -1,5 +1,5 @@
 import 'package:easy_quote_maker/configuration/server_address.dart';
-import 'package:easy_quote_maker/model/user.dart';
+import 'package:easy_quote_maker/models/user.dart';
 import 'package:easy_quote_maker/proxy/crud_proxy.dart';
 import 'package:easy_quote_maker/proxy/token_proxy.dart';
 

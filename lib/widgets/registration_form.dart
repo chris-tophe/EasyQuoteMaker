@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:easy_quote_maker/component/alert_factory.dart';
-import 'package:easy_quote_maker/component/validators.dart';
-import 'package:easy_quote_maker/model/request_token_user.dart';
-import 'package:easy_quote_maker/model/user.dart';
+import 'package:easy_quote_maker/services/alert_factory.dart';
+import 'package:easy_quote_maker/services/validators.dart';
+import 'package:easy_quote_maker/models/request_token_user.dart';
+import 'package:easy_quote_maker/models/user.dart';
 import 'package:easy_quote_maker/proxy/proxy_factory.dart';
 import 'package:easy_quote_maker/widgets/labeled_text_input.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +26,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   void initState() {
     super.initState();
-    _usernameController.text = "bobChar";
-    _passwordController.text = "bobbob";
-    _passwordConfirmController.text = "bobbob";
-    _firstNameController.text = "Bob";
-    _lastNameController.text = "Le Charpentier";
-    _emailController.text = "bob@bob.com";
+    _usernameController.text = "korben.dallas";
+    _passwordController.text = "multipass";
+    _passwordConfirmController.text = "multipass";
+    _firstNameController.text = "Korben";
+    _lastNameController.text = "Dallas";
+    _emailController.text = "korben.dallas@nycity.com";
   }
 
   @override

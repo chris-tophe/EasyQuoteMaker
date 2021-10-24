@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dio/src/options.dart';
-import 'package:easy_quote_maker/component/logger.dart';
+import 'package:easy_quote_maker/services/logger.dart';
 import 'package:easy_quote_maker/interfaces/jsonable.dart';
-import 'package:easy_quote_maker/model/token_storage.dart';
+import 'package:easy_quote_maker/models/token_storage.dart';
 import 'package:easy_quote_maker/proxy/base_proxy.dart';
 
 

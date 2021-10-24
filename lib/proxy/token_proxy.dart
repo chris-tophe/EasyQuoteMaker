@@ -1,10 +1,10 @@
 
 import 'package:dio/dio.dart';
-import 'package:easy_quote_maker/component/logger.dart';
+import 'package:easy_quote_maker/services/logger.dart';
 import 'package:easy_quote_maker/configuration/server_address.dart';
-import 'package:easy_quote_maker/model/request_token_user.dart';
-import 'package:easy_quote_maker/model/response_token.dart';
-import 'package:easy_quote_maker/model/token_storage.dart';
+import 'package:easy_quote_maker/models/request_token_user.dart';
+import 'package:easy_quote_maker/models/response_token.dart';
+import 'package:easy_quote_maker/models/token_storage.dart';
 import 'package:easy_quote_maker/proxy/base_proxy.dart';
 
 class TokenProxy extends BaseProxy{

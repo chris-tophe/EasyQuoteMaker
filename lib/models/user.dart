@@ -1,5 +1,5 @@
 import 'package:easy_quote_maker/interfaces/jsonable.dart';
-import 'package:easy_quote_maker/model/role.dart';
+import 'package:easy_quote_maker/models/role.dart';
 import 'package:flutter/foundation.dart';
 
 class User implements JSONable {
