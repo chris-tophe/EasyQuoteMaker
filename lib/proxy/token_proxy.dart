@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:easy_quote_maker/component/logger.dart';
 import 'package:easy_quote_maker/configuration/server_address.dart';
+import 'package:easy_quote_maker/model/Exceptions/unable_to_get_token_exception.dart';
 import 'package:easy_quote_maker/model/request_token_user.dart';
 import 'package:easy_quote_maker/model/response_token.dart';
 import 'package:easy_quote_maker/model/token_storage.dart';
@@ -37,8 +38,20 @@ class TokenProxy extends BaseProxy{
           return ResponseToken.fromJson(response.data).token;
         }
       }
+      on DioError catch(e){
+        String errorType = e.response as String;
+        List<String> errorToCompare = ["INVALID_CREDENTIALS","USER_LOCKED","USER_DISABLED"];
+        if (errorToCompare.contains(errorType)){
+          Logger.error("Token fetch fail : " + errorType);
+          throw UnableToGetTokenException();
+        }
+        Logger.error("Unable to get Token");
+        throw Exception("Unknown Error");
+
+      }
       catch (e) {
         Logger.error("Unable to get Token");
+        throw Exception("Unknown Error");
       }
     }
   }

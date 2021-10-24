@@ -33,5 +33,11 @@ class FetchingToken extends TokenState{
 }
 
 class FailToken extends TokenState{
-  FailToken() : super (status: TokenStatus.fail);
+  AlertDisplayInfo _failMessage;
+
+  AlertDisplayInfo get failMessage => _failMessage;
+
+  FailToken(AlertDisplayInfo failMessage) : super (status: TokenStatus.fail) {
+    _failMessage = failMessage;
+  }
 }
