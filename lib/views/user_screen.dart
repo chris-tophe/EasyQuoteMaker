@@ -1,69 +1,56 @@
-import 'package:easy_quote_maker/configuration/server_address.dart';
-import 'package:easy_quote_maker/model/role.dart';
-import 'package:easy_quote_maker/model/user.dart';
-import 'package:easy_quote_maker/proxy/crud_proxy.dart';
-import 'package:easy_quote_maker/proxy/proxy_factory.dart';
+import 'package:easy_quote_maker/controllers/user_controller.dart';
+import 'package:easy_quote_maker/models/role.dart';
+import 'package:easy_quote_maker/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class UserScreen extends StatefulWidget {
-  UserScreen({Key key}) : super(key: key);
-
-  @override
-  _UserScreenState createState() => _UserScreenState();
-}
-
-class _UserScreenState extends State<UserScreen> {
-  CrudProxy<User> userProxy;
-  Future<User> user;
-
-  @override
-  void initState() {
-    super.initState();
-    userProxy = ProxyFactory.createUserProxy();
-    user = userProxy.get();
-  }
+class UserScreen extends StatelessWidget {
+  final controller = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("EasyQuoteMaker")),
       body: Center(
-        child: FutureBuilder<User>(
-          future: user,
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: [
-                  Row(
-                    children: [Text("Login"), Text(snapshot.data.username)],
-                  ),
-                  Row(
-                    children: [Text("Email"), Text(snapshot.data.email)],
-                  ),
-                  Row(
-                    children: [Text("Prenom"), Text(snapshot.data.firstName)],
-                  ),
-                  Row(
-                    children: [Text("Nom"), Text(snapshot.data.lastName)],
-                  ),
-                  Row(
-                    children: [
-                      Text("Manager"),
-                      (snapshot.data.userManager !=null) ? Text(snapshot.data.userManager?.username) : Text("Pas de Manager")
-                    ],
-                  ),
-                  Row(
-                    children: [Text("Role"), _drawRoles(snapshot.data.roles)],
-                  ),
-                ],
-              );
-            }
-            return Container(
-              child: Text("No data"),
-            );
-          },
-        ),
+        child: Column(children: [
+          Row(
+            children: [
+              Text("Login"),
+              Obx(() => Text(controller.user$.value.username)),
+            ],
+          ),
+          Row(
+            children: [
+              Text("Email"),
+              Obx(() => Text(controller.user$.value.email))
+            ],
+          ),
+          Row(
+            children: [
+              Text("Prenom"),
+              Obx(() => Text(controller.user$.value.firstName))
+            ],
+          ),
+          Row(
+            children: [
+              Text("Nom"),
+              Obx(() => Text(controller.user$.value.lastName))
+            ],
+          ),
+          Row(
+            children: [
+              Text("Manager"),
+              Obx(() => Text(controller.user$.value.userManager?.username ?? "Pas de Manager"))
+            ],
+          ),
+          Row(
+            children: [
+              Text("Role"),
+              Obx(() => _drawRoles(controller.user$.value.roles))
+            ],
+          ),
+        ]),
       ),
     );
   }

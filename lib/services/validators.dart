@@ -1,5 +1,5 @@
-import 'package:easy_quote_maker/component/logger.dart';
-import 'package:easy_quote_maker/component/text_fill.dart';
+import 'package:easy_quote_maker/services/logger.dart';
+import 'package:easy_quote_maker/services/text_fill.dart';
 
 class Validator {
   static Function isNotEmpty = (String value) {
