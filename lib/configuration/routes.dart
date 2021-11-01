@@ -1,6 +1,7 @@
 import 'package:easy_quote_maker/controllers/login_controller.dart';
 import 'package:easy_quote_maker/controllers/user_controller.dart';
 import 'package:easy_quote_maker/controllers/user_registration_controller.dart';
+import 'package:easy_quote_maker/services/user_service.dart';
 import 'package:easy_quote_maker/views/login_screen.dart';
 import 'package:easy_quote_maker/views/user_registration_screen.dart';
 import 'package:easy_quote_maker/views/user_screen.dart';
@@ -19,6 +20,7 @@ class Routes {
       name: '/userScreen',
       page: () => UserScreen(),
       binding: BindingsBuilder(() {
+        Get.put<UserService>(UserService());
         Get.put<UserController>(UserController());
       }),
     ),
@@ -26,6 +28,7 @@ class Routes {
       name: '/registerScreen',
       page: () => UserRegistrationScreen(),
       binding: BindingsBuilder(() {
+        Get.put<UserService>(UserService());
         Get.put<UserRegistrationController>(UserRegistrationController());
       }),
     ),

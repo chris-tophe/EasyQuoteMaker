@@ -1,3 +1,4 @@
+import 'package:easy_quote_maker/configuration/initial_binding.dart';
 import 'package:easy_quote_maker/configuration/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,9 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       //home: LoginScreen(),
       initialRoute: '/login',
-      initialBinding: BindingsBuilder(() {
-        Get.put(() => LoginController());
-      }),
+      initialBinding: InitialBinding(),
       getPages: Routes.getPages,
     );
   }

@@ -1,39 +1,26 @@
-import 'dart:convert';
-
-import 'package:easy_quote_maker/models/request_token_user.dart';
-import 'package:easy_quote_maker/models/token_storage.dart';
-import 'package:easy_quote_maker/proxy/proxy_factory.dart';
+import 'package:easy_quote_maker/exceptions/not_logged_exception.dart';
+import 'package:easy_quote_maker/models/response_token.dart';
+import 'package:easy_quote_maker/services/alert_factory.dart';
+import 'package:easy_quote_maker/services/auth_service.dart';
+import 'package:easy_quote_maker/services/logger.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final usernameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
-
-  void getlastLoggedUser() async {
-    final pref = await SharedPreferences.getInstance();
-    if (pref.containsKey("user")) {
-      String s = pref.getString('user');
-      Map<String, dynamic> js = jsonDecode(s);
-      RequestTokenUser lastLoggedUser = RequestTokenUser.fromJson(js);
-      usernameTextController.text = lastLoggedUser.username;
-      passwordTextController.text = lastLoggedUser.password;
-    }
-  }
+  final _authService = Get.find<AuthService>();
 
   void login() async {
-    if (formKey.currentState.validate()) {
-      final tokenProxy = ProxyFactory.createTokenProxy();
-      RequestTokenUser user = RequestTokenUser(
+    try {
+      await _authService.logIn(
           usernameTextController.text, passwordTextController.text);
-      tokenProxy.requestTokenUser = user;
-      await tokenProxy.fetchToken();
-      if (TokenStorage.instance.token != null &&
-          TokenStorage.instance.token.isNotEmpty) {
-        Get.toNamed('userScreen');
+      if (_authService.isLogged) {
+        Get.toNamed('/userScreen');
       }
+    } on NotLoggedException {
+      AlertFactory.alertWrong(Get.context);
     }
   }
 }

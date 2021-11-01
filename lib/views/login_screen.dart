@@ -33,13 +33,13 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 10,),
                   ElevatedButton(
                     child: Text('Login'),
-                    onPressed: () async{ controller.login();},
+                    onPressed: () => controller.login(),
                   ),
                   MaterialButton(
                       child: Text("Register"),
                       onPressed: () async {
                         await Get.toNamed("registerScreen");
-                        controller.getlastLoggedUser();
+
                       })
                 ]
             ),

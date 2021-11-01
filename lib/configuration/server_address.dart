@@ -1,6 +1,8 @@
-class ServerAddress {
+import 'package:get/get.dart';
 
-  static const String _server = "https://10.0.2.2:8100";
-  static const String AUTH = _server + "/auth";
-  static const String USER = _server+"/user";
+class ServerAddress {
+  static final String _server =
+      GetPlatform.isMobile ? "https://10.0.2.2:8100" : "https://localhost:8100";
+  static final String AUTH = _server + "/login";
+  static final String USER = _server + "/user";
 }

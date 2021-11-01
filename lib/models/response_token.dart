@@ -1,9 +1,8 @@
 class ResponseToken {
-  String _token;
+  final String token;
 
-  ResponseToken.fromJson(Map<String, dynamic> json){
-    _token = json["token"];
-  }
+  ResponseToken({this.token = ''});
 
-  String get token => _token;
+  factory ResponseToken.fromJson(Map<String, dynamic> json) =>
+      ResponseToken(token: json["token"]);
 }
